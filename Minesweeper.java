@@ -16,7 +16,7 @@ public class Minesweeper {
             System.out.print("Enter your choice (1-3): ");
             difficulty = readIntegerFromInput();
             if (difficulty < 1 || difficulty > 3) {
-                System.out.println("Please enter a valid number between 1 and 3.");
+                System.out.println("Enter a number between 1 and 3.");
             }
         }
 
@@ -39,6 +39,7 @@ public class Minesweeper {
         char[][] grid = new char[size][size];
         boolean[][] revealed = new boolean[size][size];
         boolean[][] flagged = new boolean[size][size];
+        // three duplicates of the sam grid for different functions
 
         initializeGrid(grid);
 
@@ -79,18 +80,18 @@ public class Minesweeper {
 
             // while loop so the user is required to input the required format
             while (true) {
-                System.out.print("Enter: (R to reveal, F to flag/unflag), row and column (e.g., R 1 2): ");
+                System.out.print("Enter: R to reveal, F to flag/unflag, row and column (eg. R 1 2)");
                 String input = readLineFromInput().trim();
 
                 if (input.length() < 3) {
-                    System.out.println("Invalid input. Try again.");
+                    System.out.println("Invalid format.");
                     continue;
                 }
 
                 action = Character.toUpperCase(input.charAt(0));
                 String[] tokens = input.substring(1).trim().split("\\s+");
                 if (tokens.length != 2) {
-                    System.out.println("Invalid input format. Try again.");
+                    System.out.println("Invalid format");
                     continue;
                 }
                 //this record the "action", which is F or R and splits the number into two "tokens"
@@ -99,43 +100,38 @@ public class Minesweeper {
                 col = stringToInt(tokens[1]) - 1;
                 // tis converts the tokens into integers
 
-                if (row < 0 || col < 0) {
-                    System.out.println("Invalid row or column number. Please enter positive integers.");
+                if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) {
+                    System.out.println("Invalid row or column number. Enter a positive number withn the grid");
                     continue;
                 }
 
-                if (row >= grid.length || col >= grid[0].length) {
-                    System.out.println("Coordinates out of bounds. Try again.");
-                    continue;
-                }
-
-                if (action == 'F') {
-                    if (revealed[row][col]) {
-                        System.out.println("Cannot flag a revealed cell. Try again.");
+                if(action == 'F'){
+                    if(revealed[row][col]) {
+                        System.out.println("Cell is already revealed");
                         continue;
                     }
                     break;
-                    // when it works, it breaks and jumps out of the while loop
-                } else if (action == 'R') {
-                    if (flagged[row][col]) {
-                        System.out.println("Cannot reveal a flagged cell. Unflag it first. Try again.");
+                    // when it works, it breaks and skips the other checks
+                } else if(action == 'R'){
+                    if(flagged[row][col]) {
+                        System.out.println("Cell is flagged. Unflag to reveal it");
                         continue;
                     }
-                    if (revealed[row][col]) {
-                        System.out.println("Cell already revealed. Try a different cell.");
+                    if(revealed[row][col]) {
+                        System.out.println("Cell is already revealed.");
                         continue;
                     }
                     break;
                 } else {
-                    System.out.println("Invalid action. Use R to reveal or F to flag/unflag.");
+                    System.out.println("Use R to reveal or F to flag/unflag.");
                 }
             }
 
-            if (action == 'F') { 
+            if(action == 'F') { 
                 flagged[row][col] = !flagged[row][col];
-                System.out.println(flagged[row][col] ? "Cell flagged!" : "Flag removed!");
-            } else if (action == 'R') { 
-                if (firstMove) {
+                System.out.println(flagged[row][col] ? "Cell flagged" : "Flag removed");
+            } else if(action == 'R') { 
+                if(firstMove) {
                     grid = initializeGridForFirstMove(grid, row, col);
                     calculateNumbers(grid);
                     firstMove = false;
@@ -143,14 +139,14 @@ public class Minesweeper {
                     totalNonMineCells = totalCells - numMines;
                 }
 
-                if (grid[row][col] == '*') {
+                if(grid[row][col] == '*') {
                     revealed[row][col] = true;
                     gameOver = true;
                     isWin = false;
                 } else {
                     revealCell(grid, revealed, row, col);
 
-                    if (revealedCells == totalNonMineCells) {
+                    if(revealedCells == totalNonMineCells) {
                         gameOver = true;
                         isWin = true;
                     }
@@ -228,7 +224,8 @@ public class Minesweeper {
     static char[][] initializeGridForFirstMove(char[][] grid, int safeRow, int safeCol) {
         char[][] newGrid = new char[grid.length][grid[0].length];
         initializeGrid(newGrid);
-        numMines = placeMinesWithSafeArea(newGrid, numMines, safeRow, safeCol); // Update numMines
+        numMines = placeMinesWithSafeArea(newGrid, numMines, safeRow, safeCol); 
+        // update the number of mines
         return newGrid;
     }
 
@@ -239,7 +236,7 @@ public class Minesweeper {
 
         if (numMines > maxPossibleMines) {
             numMines = maxPossibleMines;
-            System.out.println("Adjusted number of mines to " + numMines + " due to safe area constraints.");
+            System.out.println("Adjusted number of mines to " + numMines);
         }
 
         Random rand = new Random();
@@ -257,7 +254,7 @@ public class Minesweeper {
             placedMines++;
         }
 
-        return placedMines; // Return actual number of mines placed
+        return placedMines;
     }
 
     static int getSafeAreaSize(int safeRow, int safeCol, int numRows, int numCols) {
@@ -296,6 +293,7 @@ public class Minesweeper {
                 }
             }
         }
+        //this reveals all neighbouring cells if they are all clear
     }
 
     static void calculateNumbers(char[][] grid) {
@@ -323,14 +321,14 @@ public class Minesweeper {
     }
 
     static void displayGrid(char[][] grid, boolean[][] revealed, boolean[][] flagged) {
-        System.out.print("   "); // Top row header
+        System.out.print("   "); 
         for (int col = 0; col < grid[0].length; col++) {
-            System.out.printf("%3d", col + 1); // Print column numbers with alignment
+            System.out.printf("%3d", col + 1); 
         }
         System.out.println();
 
         for (int row = 0; row < grid.length; row++) {
-            System.out.printf("%3d", row + 1); // Print row numbers with alignment
+            System.out.printf("%3d", row + 1); 
             for (int col = 0; col < grid[row].length; col++) {
                 if (flagged[row][col]) {
                     System.out.print("  F");
