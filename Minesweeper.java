@@ -1,9 +1,13 @@
+ 
 import java.util.Random;
+
 
 public class Minesweeper {
 
     static int revealedCells = 0;
     static int numMines; 
+    public static double time;
+
 
     public static void main(String[] args) {
         System.out.println("Choose difficulty:");
@@ -51,6 +55,7 @@ public class Minesweeper {
 
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime) / 1000; 
+        time = duration;
         //The time is in miliseconds so need to divide by 1000
         System.out.println("Time: " + duration + "seconds");
     }
@@ -157,8 +162,10 @@ public class Minesweeper {
 
         if (isWin) {
             System.out.println("You won the game!");
+            System.out.println("Your rank was " + getRank(time));
         } else {
             System.out.println("Game Over! You hit a mine.");
+            System.out.println("No rank");
         }
 
 
@@ -341,4 +348,21 @@ public class Minesweeper {
             System.out.println();
         }
     }
-}
+    public static String getRank(double time){
+        double t = time;
+        if(t <= 100){
+            return "Platinum";
+        }
+        else if (t <= 300){
+            return "Gold";
+        }
+        else if (t <= 500){
+            return "Silver";
+        }
+        else{
+            return "Bronze";
+        }
+
+    }}
+
+
