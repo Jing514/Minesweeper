@@ -43,7 +43,7 @@ public class Minesweeper {
         char[][] grid = new char[size][size];
         boolean[][] revealed = new boolean[size][size];
         boolean[][] flagged = new boolean[size][size];
-        // three duplicates of the sam grid for different functions
+        // three duplicates of the same grid for different functions
 
         initializeGrid(grid);
 
