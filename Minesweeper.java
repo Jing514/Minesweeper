@@ -103,7 +103,7 @@ public class Minesweeper {
 
                 row = stringToInt(tokens[0]) - 1;
                 col = stringToInt(tokens[1]) - 1;
-                // tis converts the tokens into integers
+                // this converts the tokens into integers
 
                 if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) {
                     System.out.println("Invalid row or column number. Enter a positive number withn the grid");
